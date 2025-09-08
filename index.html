@@ -17,6 +17,7 @@
             color: #333;
             line-height: 1.6;
             padding: 20px;
+            transition: background-color 0.5s ease;
         }
         
         .container {
@@ -26,12 +27,14 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
         }
         
         h1 {
             text-align: center;
-            color: #0066aa;
+            color: #800020; /* Guindo */
             margin-bottom: 20px;
+            transition: color 0.5s ease;
         }
         
         .description {
@@ -42,6 +45,7 @@
         
         .form-group {
             margin-bottom: 20px;
+            transition: all 0.5s ease;
         }
         
         label {
@@ -69,7 +73,7 @@
         }
         
         button {
-            background-color: #0066aa;
+            background-color: #800020; /* Guindo */
             color: white;
             border: none;
             padding: 12px 20px;
@@ -82,26 +86,35 @@
         }
         
         button:hover {
-            background-color: #004d80;
+            background-color: #600010; /* Guindo más oscuro */
         }
         
         .result {
             margin-top: 30px;
             padding: 20px;
-            background-color: #f0f8ff;
+            background-color: #f8f0f0; /* Fondo claro con tono guindo */
             border-radius: 5px;
             text-align: center;
-            display: none;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .result.visible {
+            opacity: 1;
+            height: auto;
+            overflow: visible;
         }
         
         .curp-code {
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 2px;
-            color: #0066aa;
+            color: #800020; /* Guindo */
             margin: 15px 0;
             padding: 10px;
-            background-color: #e6f2ff;
+            background-color: #f0e0e0; /* Fondo más claro con tono guindo */
             border-radius: 5px;
         }
         
@@ -118,6 +131,33 @@
             color: #888;
             font-size: 14px;
         }
+        
+        .form-container {
+            transition: all 0.5s ease;
+        }
+        
+        .form-container.hidden {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        body.guindo-theme {
+            background-color: #f9f0f0; /* Fondo con tono guindo claro */
+        }
+        
+        .guindo-theme .container {
+            box-shadow: 0 0 20px rgba(128, 0, 32, 0.2); /* Sombra con tono guindo */
+        }
+        
+        #volverBtn {
+            background-color: #333;
+            margin-top: 20px;
+        }
+        
+        #volverBtn:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
@@ -125,105 +165,107 @@
         <h1>Generador de CURP</h1>
         <p class="description">Ingresa tus datos para generar tu Clave Única de Registro de Población (CURP)</p>
         
-        <form id="curpForm">
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="nombre">Nombre(s):</label>
-                        <input type="text" id="nombre" name="nombre" required>
-                        <div class="error" id="nombreError">Solo se permiten letras y espacios</div>
+        <div class="form-container" id="formContainer">
+            <form id="curpForm">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="nombre">Nombre(s):</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                            <div class="error" id="nombreError">Solo se permiten letras y espacios</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="apellidoPaterno">Apellido Paterno:</label>
+                            <input type="text" id="apellidoPaterno" name="apellidoPaterno" required>
+                            <div class="error" id="apellidoPaternoError">Solo se permiten letras</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="apellidoPaterno">Apellido Paterno:</label>
-                        <input type="text" id="apellidoPaterno" name="apellidoPaterno" required>
-                        <div class="error" id="apellidoPaternoError">Solo se permiten letras</div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="apellidoMaterno">Apellido Materno:</label>
+                            <input type="text" id="apellidoMaterno" name="apellidoMaterno" required>
+                            <div class="error" id="apellidoMaternoError">Solo se permiten letras</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="genero">Género:</label>
+                            <select id="genero" name="genero" required>
+                                <option value="">Selecciona...</option>
+                                <option value="H">Hombre</option>
+                                <option value="M">Mujer</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="apellidoMaterno">Apellido Materno:</label>
-                        <input type="text" id="apellidoMaterno" name="apellidoMaterno" required>
-                        <div class="error" id="apellidoMaternoError">Solo se permiten letras</div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="estado">Estado de Nacimiento:</label>
+                            <select id="estado" name="estado" required>
+                                <option value="">Selecciona un estado...</option>
+                                <option value="AS">Aguascalientes</option>
+                                <option value="BC">Baja California</option>
+                                <option value="BS">Baja California Sur</option>
+                                <option value="CC">Campeche</option>
+                                <option value="CL">Coahuila</option>
+                                <option value="CM">Colima</option>
+                                <option value="CS">Chiapas</option>
+                                <option value="CH">Chihuahua</option>
+                                <option value="DF">Ciudad de México</option>
+                                <option value="DG">Durango</option>
+                                <option value="GT">Guanajuato</option>
+                                <option value="GR">Guerrero</option>
+                                <option value="HG">Hidalgo</option>
+                                <option value="JC">Jalisco</option>
+                                <option value="MC">México</option>
+                                <option value="MN">Michoacán</option>
+                                <option value="MS">Morelos</option>
+                                <option value="NT">Nayarit</option>
+                                <option value="NL">Nuevo León</option>
+                                <option value="OC">Oaxaca</option>
+                                <option value="PL">Puebla</option>
+                                <option value="QT">Querétaro</option>
+                                <option value="QR">Quintana Roo</option>
+                                <option value="SP">Sinaloa</option>
+                                <option value="SL">San Luis Potosí</option>
+                                <option value="SR">Sonora</option>
+                                <option value="TC">Tabaco</option>
+                                <option value="TS">Tamaulipas</option>
+                                <option value="TL">Tlaxcala</option>
+                                <option value="VZ">Veracruz</option>
+                                <option value="YN">Yucatán</option>
+                                <option value="ZS">Zacatecas</option>
+                                <option value="NE">Extranjero</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="genero">Género:</label>
-                        <select id="genero" name="genero" required>
-                            <option value="">Selecciona...</option>
-                            <option value="H">Hombre</option>
-                            <option value="M">Mujer</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="estado">Estado de Nacimiento:</label>
-                        <select id="estado" name="estado" required>
-                            <option value="">Selecciona un estado...</option>
-                            <option value="AS">Aguascalientes</option>
-                            <option value="BC">Baja California</option>
-                            <option value="BS">Baja California Sur</option>
-                            <option value="CC">Campeche</option>
-                            <option value="CL">Coahuila</option>
-                            <option value="CM">Colima</option>
-                            <option value="CS">Chiapas</option>
-                            <option value="CH">Chihuahua</option>
-                            <option value="DF">Ciudad de México</option>
-                            <option value="DG">Durango</option>
-                            <option value="GT">Guanajuato</option>
-                            <option value="GR">Guerrero</option>
-                            <option value="HG">Hidalgo</option>
-                            <option value="JC">Jalisco</option>
-                            <option value="MC">México</option>
-                            <option value="MN">Michoacán</option>
-                            <option value="MS">Morelos</option>
-                            <option value="NT">Nayarit</option>
-                            <option value="NL">Nuevo León</option>
-                            <option value="OC">Oaxaca</option>
-                            <option value="PL">Puebla</option>
-                            <option value="QT">Querétaro</option>
-                            <option value="QR">Quintana Roo</option>
-                            <option value="SP">Sinaloa</option>
-                            <option value="SL">San Luis Potosí</option>
-                            <option value="SR">Sonora</option>
-                            <option value="TC">Tabaco</option>
-                            <option value="TS">Tamaulipas</option>
-                            <option value="TL">Tlaxcala</option>
-                            <option value="VZ">Veracruz</option>
-                            <option value="YN">Yucatán</option>
-                            <option value="ZS">Zacatecas</option>
-                            <option value="NE">Extranjero</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <button type="submit">Generar CURP</button>
-        </form>
+                
+                <button type="submit">Generar CURP</button>
+            </form>
+        </div>
         
         <div class="result" id="resultado">
             <h2>Tu CURP es:</h2>
             <div class="curp-code" id="curpCode"></div>
+            <button id="volverBtn">Generar otra CURP</button>
         </div>
     </div>
-    
-
-    <script>
+   
+   <script>
         document.getElementById('curpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -231,6 +273,18 @@
             if (validarFormulario()) {
                 generarCURP();
             }
+        });
+        
+        document.getElementById('volverBtn').addEventListener('click', function() {
+            // Restaurar el formulario
+            document.getElementById('formContainer').classList.remove('hidden');
+            document.getElementById('resultado').classList.remove('visible');
+            
+            // Restaurar colores originales
+            document.body.classList.remove('guindo-theme');
+            
+            // Limpiar formulario
+            document.getElementById('curpForm').reset();
         });
         
         // Validar que solo contengan letras
@@ -360,9 +414,22 @@
             // 11. Dos dígitos para evitar duplicados (00 para este ejemplo)
             curp += '00';
             
-            // Mostrar el resultado
-            document.getElementById('curpCode').textContent = curp;
-            document.getElementById('resultado').style.display = 'block';
+            // Aplicar efectos visuales
+            aplicarEfectos();
+            
+            // Mostrar el resultado después de la animación
+            setTimeout(function() {
+                document.getElementById('curpCode').textContent = curp;
+                document.getElementById('resultado').classList.add('visible');
+            }, 500);
+        }
+        
+        function aplicarEfectos() {
+            // Cambiar a tema guindo
+            document.body.classList.add('guindo-theme');
+            
+            // Ocultar el formulario
+            document.getElementById('formContainer').classList.add('hidden');
         }
     </script>
 </body>
