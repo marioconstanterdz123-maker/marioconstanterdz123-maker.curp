@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de CURP</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #0066aa;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        button {
+            background-color: #0066aa;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #004d80;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .curp-code {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #0066aa;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+        
+        .error {
+            color: #d9534f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de CURP</h1>
+        <p class="description">Ingresa tus datos para generar tu Clave Única de Registro de Población (CURP)</p>
+        
+        <form id="curpForm">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="nombre">Nombre(s):</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                        <div class="error" id="nombreError">Solo se permiten letras y espacios</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="apellidoPaterno">Apellido Paterno:</label>
+                        <input type="text" id="apellidoPaterno" name="apellidoPaterno" required>
+                        <div class="error" id="apellidoPaternoError">Solo se permiten letras</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="apellidoMaterno">Apellido Materno:</label>
+                        <input type="text" id="apellidoMaterno" name="apellidoMaterno" required>
+                        <div class="error" id="apellidoMaternoError">Solo se permiten letras</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="genero">Género:</label>
+                        <select id="genero" name="genero" required>
+                            <option value="">Selecciona...</option>
+                            <option value="H">Hombre</option>
+                            <option value="M">Mujer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="estado">Estado de Nacimiento:</label>
+                        <select id="estado" name="estado" required>
+                            <option value="">Selecciona un estado...</option>
+                            <option value="AS">Aguascalientes</option>
+                            <option value="BC">Baja California</option>
+                            <option value="BS">Baja California Sur</option>
+                            <option value="CC">Campeche</option>
+                            <option value="CL">Coahuila</option>
+                            <option value="CM">Colima</option>
+                            <option value="CS">Chiapas</option>
+                            <option value="CH">Chihuahua</option>
+                            <option value="DF">Ciudad de México</option>
+                            <option value="DG">Durango</option>
+                            <option value="GT">Guanajuato</option>
+                            <option value="GR">Guerrero</option>
+                            <option value="HG">Hidalgo</option>
+                            <option value="JC">Jalisco</option>
+                            <option value="MC">México</option>
+                            <option value="MN">Michoacán</option>
+                            <option value="MS">Morelos</option>
+                            <option value="NT">Nayarit</option>
+                            <option value="NL">Nuevo León</option>
+                            <option value="OC">Oaxaca</option>
+                            <option value="PL">Puebla</option>
+                            <option value="QT">Querétaro</option>
+                            <option value="QR">Quintana Roo</option>
+                            <option value="SP">Sinaloa</option>
+                            <option value="SL">San Luis Potosí</option>
+                            <option value="SR">Sonora</option>
+                            <option value="TC">Tabaco</option>
+                            <option value="TS">Tamaulipas</option>
+                            <option value="TL">Tlaxcala</option>
+                            <option value="VZ">Veracruz</option>
+                            <option value="YN">Yucatán</option>
+                            <option value="ZS">Zacatecas</option>
+                            <option value="NE">Extranjero</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Generar CURP</button>
+        </form>
+        
+        <div class="result" id="resultado">
+            <h2>Tu CURP es:</h2>
+            <div class="curp-code" id="curpCode"></div>
+        </div>
+    </div>
+    
+
+    <script>
+        document.getElementById('curpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos
+            if (validarFormulario()) {
+                generarCURP();
+            }
+        });
+        
+        // Validar que solo contengan letras
+        document.getElementById('nombre').addEventListener('input', function() {
+            validarSoloLetras(this, 'nombreError');
+        });
+        
+        document.getElementById('apellidoPaterno').addEventListener('input', function() {
+            validarSoloLetras(this, 'apellidoPaternoError');
+        });
+        
+        document.getElementById('apellidoMaterno').addEventListener('input', function() {
+            validarSoloLetras(this, 'apellidoMaternoError');
+        });
+        
+        function validarSoloLetras(campo, errorId) {
+            const errorElement = document.getElementById(errorId);
+            const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+            
+            if (campo.value && !regex.test(campo.value)) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validarFormulario() {
+            let valido = true;
+            
+            // Validar campos obligatorios
+            const campos = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'genero', 'fechaNacimiento', 'estado'];
+            
+            campos.forEach(campo => {
+                const element = document.getElementById(campo);
+                if (!element.value) {
+                    valido = false;
+                    element.style.borderColor = '#d9534f';
+                } else {
+                    element.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Validar formatos de texto
+            if (!validarSoloLetras(document.getElementById('nombre'), 'nombreError')) valido = false;
+            if (!validarSoloLetras(document.getElementById('apellidoPaterno'), 'apellidoPaternoError')) valido = false;
+            if (!validarSoloLetras(document.getElementById('apellidoMaterno'), 'apellidoMaternoError')) valido = false;
+            
+            return valido;
+        }
+        
+        function generarCURP() {
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value.toUpperCase();
+            const apellidoPaterno = document.getElementById('apellidoPaterno').value.toUpperCase();
+            const apellidoMaterno = document.getElementById('apellidoMaterno').value.toUpperCase();
+            const genero = document.getElementById('genero').value;
+            const fechaNacimiento = new Date(document.getElementById('fechaNacimiento').value);
+            const estado = document.getElementById('estado').value;
+            
+            // 1. Primera letra del primer apellido
+            let curp = apellidoPaterno.charAt(0);
+            
+            // 2. Primera vocal interna del primer apellido
+            const vocales = 'AEIOU';
+            for (let i = 1; i < apellidoPaterno.length; i++) {
+                if (vocales.includes(apellidoPaterno.charAt(i))) {
+                    curp += apellidoPaterno.charAt(i);
+                    break;
+                }
+            }
+            
+            // 3. Primera letra del segundo apellido
+            curp += apellidoMaterno.charAt(0);
+            
+            // 4. Primera letra del nombre
+            // Buscar el primer nombre (ignorando preposiciones)
+            const nombres = nombre.split(' ');
+            let primerNombre = nombres[0];
+            
+            // Si el primer nombre es José o María, tomar el siguiente
+            if ((primerNombre === 'JOSE' || primerNombre === 'MARIA') && nombres.length > 1) {
+                primerNombre = nombres[1];
+            }
+            
+            curp += primerNombre.charAt(0);
+            
+            // 5. Fecha de nacimiento (año, mes, dia)
+            const año = fechaNacimiento.getFullYear().toString().substr(2, 2);
+            const mes = ('0' + (fechaNacimiento.getMonth() + 1)).slice(-2);
+            const dia = ('0' + fechaNacimiento.getDate()).slice(-2);
+            
+            curp += año + mes + dia;
+            
+            // 6. Género (H o M)
+            curp += genero;
+            
+            // 7. Estado
+            curp += estado;
+            
+            // 8. Primera consonante interna del primer apellido
+            const consonantes = 'BCDFGHJKLMNPQRSTVWXYZ';
+            for (let i = 1; i < apellidoPaterno.length; i++) {
+                if (consonantes.includes(apellidoPaterno.charAt(i))) {
+                    curp += apellidoPaterno.charAt(i);
+                    break;
+                }
+            }
+            
+            // 9. Primera consonante interna del segundo apellido
+            for (let i = 1; i < apellidoMaterno.length; i++) {
+                if (consonantes.includes(apellidoMaterno.charAt(i))) {
+                    curp += apellidoMaterno.charAt(i);
+                    break;
+                }
+            }
+            
+            // 10. Primera consonante interna del nombre
+            for (let i = 1; i < primerNombre.length; i++) {
+                if (consonantes.includes(primerNombre.charAt(i))) {
+                    curp += primerNombre.charAt(i);
+                    break;
+                }
+            }
+            
+            // 11. Dos dígitos para evitar duplicados (00 para este ejemplo)
+            curp += '00';
+            
+            // Mostrar el resultado
+            document.getElementById('curpCode').textContent = curp;
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
